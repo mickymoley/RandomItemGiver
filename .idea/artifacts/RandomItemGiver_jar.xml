@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RandomItemGiver:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/RandomItemGiver_jar</output-path>
+    <root id="archive" name="RandomItemGiver.jar">
+      <element id="module-output" name="RandomItemGiver" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Resources/spigot-1.15.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Resources/spigot-api-1.15.2-R0.1-20200405.054500-79.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
