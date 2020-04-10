@@ -11,10 +11,12 @@ import java.util.Random;
 
 public class TaskHandler {
 
-    TaskGiveItems task;
-    RandomItemGiver plugin;
-    Random random = new Random();
-    List<String> validItems;
+    private TaskGiveItems task;
+    private RandomItemGiver plugin;
+    private Random random = new Random();
+    private List<String> validItems;
+    private boolean skipItemUpdater = false;
+    private Material idkWhyThisFixesIt = Material.ACACIA_SAPLING; // <-- this line officer
 
     public TaskHandler(RandomItemGiver plugin){
         this.plugin = plugin;
@@ -37,6 +39,7 @@ public class TaskHandler {
     public void giveRandomItem(){
         List<String> worlds = plugin.getConfigHandler().getActiveWorlds();
         Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
+        skipItemUpdater = true;
         for (Player player : players){
             for (String world : worlds){
                 if (world.toLowerCase().equals(player.getWorld().getName().toLowerCase())){
@@ -45,9 +48,12 @@ public class TaskHandler {
                 }
             }
         }
+        skipItemUpdater = false;
     }
     public void giveRandomItem(Player player){
-        updateItems();
+        if (!skipItemUpdater){
+            updateItems();
+        }
         if (validItems.size() > 0){
             int index = random.nextInt(validItems.size());
             //player.sendMessage(validItems.get(index)); // <-- Debug message

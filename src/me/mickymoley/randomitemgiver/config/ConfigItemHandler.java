@@ -8,7 +8,9 @@ import java.util.List;
 
 public class ConfigItemHandler {
     private ConfigItem configItem;
+    private boolean skipConfigUpdate = false;
     public String ENABLED_ITEMS = "EnabledItems";
+    private Material idkWhyThisFixesIt = Material.ACACIA_SAPLING; // <-- this line officer
 
     public ConfigItemHandler(ConfigItem configItem){
         this.configItem = configItem;
@@ -24,9 +26,11 @@ public class ConfigItemHandler {
     }
 
     public boolean addAllItems() {
+        skipConfigUpdate = true;
         for (Material material : Material.values()){
             addItem(material);
         }
+        skipConfigUpdate = false;
         return true;
     }
     public boolean addItem(ItemStack itemStack){
@@ -36,7 +40,13 @@ public class ConfigItemHandler {
         return addItem(material.name());
     }
     public boolean addItem(String name){
-        configItem.reloadItemConfig();
+        if (!skipConfigUpdate){
+            configItem.reloadItemConfig();
+        }
+        
+        if (name.startsWith("LEGACY_")){
+            name = name.substring(7);
+        }
         List<String> enabledItems = getEnabledItems();
         if (enabledItems.contains(name)){
             return false;
@@ -50,9 +60,11 @@ public class ConfigItemHandler {
     }
 
     public boolean removeAllItems() {
+        skipConfigUpdate = true;
         for (String itemName : getEnabledItems()){
             removeItem(itemName);
         }
+        skipConfigUpdate = false;
         return true;
     }
     public boolean removeItem(ItemStack itemStack){
@@ -62,7 +74,9 @@ public class ConfigItemHandler {
         return removeItem(material.name());
     }
     public boolean removeItem(String name){
-        configItem.reloadItemConfig();
+        if (!skipConfigUpdate){
+            configItem.reloadItemConfig();
+        }
         List<String> enabledItems = getEnabledItems();
         if (!enabledItems.contains(name)){
             return false;

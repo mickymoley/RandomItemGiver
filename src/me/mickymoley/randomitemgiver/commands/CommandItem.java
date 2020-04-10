@@ -7,11 +7,13 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandItem extends RIGCommand {
+    private Material idkWhyThisFixesIt = Material.ACACIA_SAPLING; // <-- this line officer
     public CommandItem(RandomItemGiver plugin, String[] aliases) {
         super(plugin, aliases);
     }
@@ -76,10 +78,11 @@ public class CommandItem extends RIGCommand {
                     if (commandSender instanceof Player){
                         Player player = (Player) commandSender;
                         if (!player.getInventory().getItemInMainHand().getType().isAir()){
-                            plugin.getConfigItemHandler().addItem(player.getInventory().getItemInMainHand());
+                            ItemStack itemStack = player.getInventory().getItemInMainHand();
+                            String name = itemStack.getType().name();
+                            plugin.getConfigItemHandler().addItem(name);
                             commandSender.sendMessage(
-                                    "Item " + player.getInventory().getItemInMainHand().getType().name()
-                                            + " was added to the possible items.");
+                                    "Item " + name + " was added to the possible items.");
                             return true;
                         }
                     }
