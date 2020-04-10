@@ -50,17 +50,14 @@ public class TaskHandler {
         updateItems();
         if (validItems.size() > 0){
             int index = random.nextInt(validItems.size());
-            //player.sendMessage(validItems.get(index)); <-- Debug message
+            //player.sendMessage(validItems.get(index)); // <-- Debug message
             player.getInventory().addItem(
                     new ItemStack(Material.getMaterial(validItems.get(index)), 1));
         }
     }
     private void updateItems(){
         List<String> enabledItems = plugin.getConfigItemHandler().getEnabledItems();
-        if (enabledItems.equals(validItems)){
-            return;
-        }
-        else{
+        if (!enabledItems.equals(validItems)){
             List<String> ret = new ArrayList<String>();
             for (String itemName : enabledItems){
                 if (validItem(itemName.toUpperCase())){
@@ -71,11 +68,6 @@ public class TaskHandler {
         }
     }
     private boolean validItem(String itemName){
-        try{
-            Material.getMaterial(itemName);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return Material.getMaterial(itemName) != null;
     }
 }
