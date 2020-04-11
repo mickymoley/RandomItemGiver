@@ -3,7 +3,7 @@ ItemsPerMinute: 3
 # Max Number of items the player can receive per minute
 MaxItemsPerMinute: 30
 # Worlds where the plugin is currently active
-ActiveWorlds:
+EnabledWorlds:
   -world
   -world_nether
   -world_the_end

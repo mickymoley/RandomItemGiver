@@ -37,8 +37,9 @@ public class TaskHandler {
     }
 
     public void giveRandomItem(){
-        List<String> worlds = plugin.getConfigHandler().getActiveWorlds();
+        List<String> worlds = plugin.getConfigHandler().getEnabledWorlds();
         Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
+        updateItems();
         skipItemUpdater = true;
         for (Player player : players){
             for (String world : worlds){
@@ -64,7 +65,7 @@ public class TaskHandler {
     private void updateItems(){
         List<String> enabledItems = plugin.getConfigItemHandler().getEnabledItems();
         if (!enabledItems.equals(validItems)){
-            List<String> ret = new ArrayList<String>();
+            List<String> ret = new ArrayList<>();
             for (String itemName : enabledItems){
                 if (validItem(itemName.toUpperCase())){
                     ret.add(itemName.toUpperCase());

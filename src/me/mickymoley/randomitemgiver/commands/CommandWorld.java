@@ -33,7 +33,7 @@ public class CommandWorld extends RIGCommand {
                     return false;
                 }
                 else{
-                    List<String> activeWorlds = plugin.getConfigHandler().getActiveWorlds();
+                    List<String> activeWorlds = plugin.getConfigHandler().getEnabledWorlds();
                     if (activeWorlds.isEmpty()){
                         commandSender.sendMessage("There are currently no enabled worlds.");
                     }
@@ -110,7 +110,7 @@ public class CommandWorld extends RIGCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String[] args) {
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         switch (args.length) {
             case 2 :
                 if ("add".startsWith(args[1].toLowerCase())){
@@ -129,7 +129,7 @@ public class CommandWorld extends RIGCommand {
                         if ("all".startsWith(args[2].toLowerCase())){
                             ret.add("all");
                         }
-                        for (String worldName : plugin.getConfigHandler().getUnactiveWorlds()){
+                        for (String worldName : plugin.getConfigHandler().getDisabledWorlds()){
                             if (worldName.toLowerCase().startsWith(args[2].toLowerCase())){
                                 ret.add(worldName);
                             }
@@ -139,7 +139,7 @@ public class CommandWorld extends RIGCommand {
                         if ("all".startsWith(args[2].toLowerCase())){
                             ret.add("all");
                         }
-                        for (String worldName : plugin.getConfigHandler().getActiveWorlds()){
+                        for (String worldName : plugin.getConfigHandler().getEnabledWorlds()){
                             if (worldName.toLowerCase().startsWith(args[2].toLowerCase())){
                                 ret.add(worldName);
                             }
