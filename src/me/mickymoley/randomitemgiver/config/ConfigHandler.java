@@ -6,6 +6,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ConfigHandler {
@@ -33,25 +35,20 @@ public class ConfigHandler {
     }
 
     public boolean addWorld(Player player){
-        return this.addWorld(player.getWorld().getName());
+        return addWorld(player.getWorld().getName());
     }
     public boolean addWorld(String world){
-        List<String> ret = new ArrayList<>();
-        ret.add(world);
-        return addWorld(ret);
+        return addWorld(Collections.singletonList(world));
     }
     public boolean addWorld(List<String> worlds){
-        plugin.reloadConfig();
-        List<String> enabledWorlds = plugin.getConfig().getStringList(ENABLEDWORLDS);
+        List<String> enabledWorlds = getEnabledWorlds();
         List<String> newEnabledWorlds = new ArrayList<>();
-        boolean altered = false;
         for (String world : worlds){
             if (!enabledWorlds.contains(world)){
                 newEnabledWorlds.add(world);
-                altered = true;
             }
         }
-        if (altered){
+        if (newEnabledWorlds.size() != 0){
             enabledWorlds.addAll(newEnabledWorlds);
             plugin.getConfig().set(ENABLEDWORLDS, enabledWorlds);
             plugin.saveConfig();
@@ -64,21 +61,11 @@ public class ConfigHandler {
         return this.removeWorld(player.getWorld().getName());
     }
     public boolean removeWorld(String world){
-        List<String> ret = new ArrayList<>();
-        ret.add(world);
-        return removeWorld(ret);
+        return removeWorld(Collections.singletonList(world));
     }
     public boolean removeWorld(List<String> worlds){
-        plugin.reloadConfig();
-        List<String> enabledWorlds = plugin.getConfig().getStringList(ENABLEDWORLDS);
-        boolean altered = false;
-        for (String world : worlds){
-            if (enabledWorlds.contains(world)){
-                enabledWorlds.remove(world);
-                altered = true;
-            }
-        }
-        if (altered) {
+        List<String> enabledWorlds = getEnabledWorlds();
+        if (enabledWorlds.removeAll(worlds)) {
             plugin.getConfig().set(ENABLEDWORLDS, enabledWorlds);
             plugin.saveConfig();
             return true;
@@ -100,16 +87,15 @@ public class ConfigHandler {
         return plugin.getConfig().getStringList(ENABLEDWORLDS);
     }
     public List<String> getDisabledWorlds() {
-        plugin.reloadConfig();
-        List<String> activeWorlds = plugin.getConfig().getStringList(ENABLEDWORLDS);
-        List<String> worldNames = this.getBukkitWorldNames();
-        worldNames.removeAll(activeWorlds);
-        return worldNames;
+        List<String> worlds = this.getBukkitWorldNames();
+        worlds.removeAll(getEnabledWorlds());
+        return worlds;
     }
 
-    private List<String> getBukkitWorldNames(){
-        List<String> ret = new ArrayList<>();
-        for (World world : Bukkit.getWorlds()){
+    private List<String> getBukkitWorldNames() {
+        List<World> worlds = Bukkit.getWorlds();
+        List<String> ret = new ArrayList<>(worlds.size());
+        for (World world : worlds){
             ret.add(world.getName());
         }
         return ret;

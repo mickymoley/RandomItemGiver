@@ -1,13 +1,13 @@
 package me.mickymoley.randomitemgiver;
 
+import com.sun.istack.internal.NotNull;
+import org.apache.commons.lang.NullArgumentException;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.logging.Level;
 
 public class TaskHandler {
 
@@ -15,7 +15,6 @@ public class TaskHandler {
     private RandomItemGiver plugin;
     private Random random = new Random();
     private List<String> validItems;
-    private boolean skipItemUpdater = false;
     private Material idkWhyThisFixesIt = Material.ACACIA_SAPLING; // <-- this line officer
 
     public TaskHandler(RandomItemGiver plugin){
@@ -38,28 +37,26 @@ public class TaskHandler {
 
     public void giveRandomItem(){
         List<String> worlds = plugin.getConfigHandler().getEnabledWorlds();
-        Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
-        updateItems();
-        skipItemUpdater = true;
-        for (Player player : players){
-            for (String world : worlds){
-                if (world.toLowerCase().equals(player.getWorld().getName().toLowerCase())){
-                    giveRandomItem(player);
-                    break;
-                }
+        List<Player> givePlayers = new ArrayList<>();
+        for (Player player : plugin.getServer().getOnlinePlayers()){
+            if (worlds.contains(player.getWorld().getName())) {
+                givePlayers.add(player);
             }
         }
-        skipItemUpdater = false;
+        giveRandomItem(givePlayers);
     }
+
     public void giveRandomItem(Player player){
-        if (!skipItemUpdater){
-            updateItems();
-        }
+        giveRandomItem(Collections.singletonList(player));
+    }
+    public void giveRandomItem(List<Player> players){
+        updateItems();
         if (validItems.size() > 0){
-            int index = random.nextInt(validItems.size());
-            //player.sendMessage(validItems.get(index)); // <-- Debug message
-            player.getInventory().addItem(
-                    new ItemStack(Material.getMaterial(validItems.get(index)), 1));
+            for (Player player : players){
+                player.getInventory().addItem(
+                        new ItemStack(Material.getMaterial(validItems.get(random.nextInt(validItems.size()))),
+                                1));
+            }
         }
     }
     private void updateItems(){

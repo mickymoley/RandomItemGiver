@@ -1,10 +1,11 @@
 package me.mickymoley.randomitemgiver.config;
 
-import me.mickymoley.randomitemgiver.RandomItemGiver;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ConfigItemHandler {
@@ -32,25 +33,20 @@ public class ConfigItemHandler {
         return addItem(material.name());
     }
     public boolean addItem(String name){
-        List<String> ret =  new ArrayList<>();
-        ret.add(name);
-        return addItem(ret);
+        return addItem(Collections.singletonList(name));
     }
     public boolean addItem(List<String> names){
-        configItem.reloadItemConfig();
         List<String> enabledItems = getEnabledItems();
         List<String> newEnabledItems = new ArrayList<>();
-        boolean altered = false;
         for (String name : names){
             if (name.startsWith("LEGACY_")){
                 name = name.substring(7);
             }
             if (!enabledItems.contains(name)){
                 newEnabledItems.add(name);
-                altered = true;
             }
         }
-        if (altered) {
+        if (newEnabledItems.size() != 0) {
             enabledItems.addAll(newEnabledItems);
             configItem.getItemConfig().set(ENABLED_ITEMS, enabledItems);
             configItem.saveItemConfig();
@@ -66,21 +62,11 @@ public class ConfigItemHandler {
         return removeItem(material.name());
     }
     public boolean removeItem(String name){
-        List<String> ret =  new ArrayList<>();
-        ret.add(name);
-        return removeItem(ret);
+        return removeItem(Collections.singletonList(name));
     }
     public boolean removeItem(List<String> names){
-        configItem.reloadItemConfig();
         List<String> enabledItems = getEnabledItems();
-        boolean altered = false;
-        for (String name : names) {
-            if (enabledItems.contains(name)){
-                enabledItems.remove(name);
-                altered = true;
-            }
-        }
-        if (altered){
+        if (enabledItems.removeAll(names)){
             configItem.getItemConfig().set(ENABLED_ITEMS, enabledItems);
             configItem.saveItemConfig();
             return true;
@@ -89,8 +75,9 @@ public class ConfigItemHandler {
     }
 
     public boolean addAllItems() {
-        List<String> names = new ArrayList<>();
-        for (Material material : Material.values()){
+        Material[] materials = Material.values();
+        List<String> names = new ArrayList<>(materials.length);
+        for (Material material : materials){
             names.add(material.name());
         }
         return addItem(names);
