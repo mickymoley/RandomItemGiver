@@ -15,6 +15,7 @@ public class TaskHandler {
     private RandomItemGiver plugin;
     private Random random = new Random();
     private List<String> validItems;
+    private List<String> oldEnabledItems;
     private Material idkWhyThisFixesIt = Material.ACACIA_SAPLING; // <-- this line officer
 
     public TaskHandler(RandomItemGiver plugin){
@@ -61,7 +62,7 @@ public class TaskHandler {
     }
     private void updateItems(){
         List<String> enabledItems = plugin.getConfigItemHandler().getEnabledItems();
-        if (!enabledItems.equals(validItems)){
+        if (!enabledItems.equals(oldEnabledItems)){
             List<String> ret = new ArrayList<>();
             for (String itemName : enabledItems){
                 if (validItem(itemName.toUpperCase())){
@@ -69,6 +70,7 @@ public class TaskHandler {
                 }
             }
             validItems = ret;
+            oldEnabledItems = enabledItems;
         }
     }
     private boolean validItem(String itemName){

@@ -1,7 +1,7 @@
 name: RandomItemGiver
 author: mickymoley
 main: me.mickymoley.randomitemgiver.RandomItemGiver
-version: 0.0.122
+version: 0.0.123
 prefix: RIG
 description: Randomly spawns items into peoples inventories! Can alter which worlds are effected in the config or in-game.
 commands:
